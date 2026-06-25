@@ -1,0 +1,62 @@
+# Configuration File
+
+# Data related parameters
+data:
+  input_path: "./mydata_path" # path to the input data
+  input_file_name: "dataset1"  # name of the input file (No need for the .h5 suffix)
+  output_path: "output"  # path to save the output results
+  batch_size: 512  # batch size for both pretrain and clustering
+  key_x1: "X1"
+  key_x2: "X2"
+  key_name1: "name1"
+  key_name2: "name2"
+  key_labels: "Y"
+
+# Model parameters
+model:
+  activation: "gelu"
+  sigma1: 2.5  # noisy level for modality1
+  sigma2: 1.5  # noisy level for modality2
+
+# Training parameters
+training:
+  pretrain_lr: 0.001  # learning rate in pretrain stage
+  clustering_lr: 1.0  # learning rate in clustering stage
+  pretrain_epochs: 240
+  clustering_max_iter: 200
+  cutoff1: 0.3  # In pretrain state, start to train kl_loss after what ratio of epoch
+  cutoff2: 0.8  # In pretrain state, start to train swap_loss after what ratio of pretrain_epochs
+  cutoff3: 0.5  # In fitting state, start to train marker_loss after what ratio of epoch
+  update_interval: 1  # update interval for clustering, when epoch%update_interval == 0, update clustering center
+  tol: 0.00001  # tolerance for clustering, when delta_label < tol, stop clustering
+
+# Hyperparameters
+hyperparams:
+  alpha: 1.0  # coefficient of kl_loss
+  gamma: 0.05  # coefficient of clustering loss
+  tau: 1.0  # fuzziness of clustering loss
+  phi1: 0.001  # coefficient of KL loss in pretraining stage
+  phi2: 0.002  # coefficient of swap loss in clustering stage
+  resolution: 0.8  # resolution for init n_clusters with louvain
+
+# Network structure
+network:
+  encodeLayer1: [256, 64, 32, 16]  # encoder layer size for modality1
+  encodeLayer2: [256, 64, 32, 16]  # encoder layer size for modality2
+  decodeLayer1: [16, 64, 256]  # decoder layer size for modality1
+  decodeLayer2: [16, 64, 256]  # decoder layer size for modality2
+
+# System settings
+system:
+  device: "cuda:1"  # device for training
+
+# Cell annotation stage
+openai:
+  api_key: ''
+  base_url: ''  # openai format
+  model: ''  # Choose an appropriate model
+  is_thinking_model: False  # Whether it is a reasoning/thinking model
+
+annotation:
+  tissue: "Human PBMC"  # If you know the dataset's tissue origin, use it for cell annotation
+  top_n_genes: 20  # Number of marker genes extracted for each cell population (used for cell annotation)
